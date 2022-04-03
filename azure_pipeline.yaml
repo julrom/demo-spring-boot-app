@@ -5,6 +5,13 @@ trigger:
 pool: 
   vmImage: 'ubuntu-latest'
 
+parameters:
+  - name: mode
+    displayName: "mode"
+    type: boolean
+    default: true
+      
+
 variables:
   serviceConnection: sc-acr
   repository_dev: spring-boot-app/dev
@@ -13,7 +20,7 @@ variables:
 
 stages:
   - stage: DEV_BUILD_PUSH_AND_PUBLISH_ARTIFACT
-    condition: eq(variables['Build.SourceBranchName'],'dev')
+    condition: and(eq(variables['Build.SourceBranchName'],'dev'), eq(${{ parameters.mode }}, true))
 
     jobs:
       - job: INSTALL_DEPENDENCIES_DEV
@@ -23,14 +30,14 @@ stages:
           - task: Maven@3
             displayName: 'Maven install'
             inputs:
-            mavenPomFile: 'pom.xml'
-            mavenOptions: '-Xmx3072m'
-            javaHomeOption: 'JDKVersion'
-            jdkVersionOption: '1.8'
-            jdkArchitectureOption: 'x64'
-            publishJUnitResults: true
-            testResultsFiles: '**/surefire-reports/TEST-*.xml'
-            goals: 'package'
+              mavenPomFile: 'pom.xml'
+              mavenOptions: '-Xmx3072m'
+              javaHomeOption: 'JDKVersion'
+              jdkVersionOption: '1.8'
+              jdkArchitectureOption: 'x64'
+              publishJUnitResults: true
+              testResultsFiles: '**/TEST-*.xml'
+              goals: 'package'
 
           - task: Docker@2
             displayName: Login to ACR
@@ -54,5 +61,45 @@ stages:
               command: logout
               containerRegistry: $(serviceConnection)
 
+  - stage: PROD_BUILD_PUSH_AND_PUBLISH_ARTIFACT
+    condition: and(eq(variables['Build.SourceBranchName'],'master'), eq(${{ parameters.mode }}, true))
 
+    jobs:
+      - job: INSTALL_DEPENDENCIES_PROD
+        displayName: "Login, Build, Push, Logout"
+
+        steps:
+          - task: Maven@3
+            displayName: 'Maven install'
+            inputs:
+              mavenPomFile: 'pom.xml'
+              mavenOptions: '-Xmx3072m'
+              javaHomeOption: 'JDKVersion'
+              jdkVersionOption: '1.8'
+              jdkArchitectureOption: 'x64'
+              publishJUnitResults: true
+              testResultsFiles: '**/TEST-*.xml'
+              goals: 'package'
+
+          - task: Docker@2
+            displayName: Login to ACR
+            inputs:
+              command: login
+              containerRegistry: $(serviceConnection)
+
+          - task: Docker@2
+            displayName: Docker Build and Push PROD $(Build.BuildId)
+            inputs:
+              command: buildAndPush
+              repository: $(repository_prod)
+              Dockerfile: Dockerfile
+              tags: |
+                $(defaultTag)
+                $(Build.BuildId)
+
+          - task: Docker@2
+            displayName: Logout of ACR
+            inputs:
+              command: logout
+              containerRegistry: $(serviceConnection)
  
