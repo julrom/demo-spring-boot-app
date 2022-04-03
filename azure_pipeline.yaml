@@ -13,7 +13,6 @@ parameters:
       
 
 variables:
-  hasRun: $(flag)
   serviceConnection: sc-acr
   repository_dev: spring-boot-app/dev
   repository_prod: spring-boot-app/prod
