@@ -39,8 +39,8 @@ stages:
           - task: CopyFiles@2
             displayName: Copying ARM templates
             inputs:
-              SourceFolder: 'IaC\azure_container_registry/'
-              Contents: '**'
+              #SourceFolder: 'IaC\azure_container_registry/'
+              Contents: '**/IaC/**'
               TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
           - task: AzureResourceManagerTemplateDeployment@3
@@ -52,8 +52,8 @@ stages:
               resourceGroupName: 'rg-acr-test'
               location: 'centralus'
               templateLocation: 'Linked artifact'
-              csmFile: '$(Build.ArtifactStagingDirectory)/template.json'
-              csmParametersFile: '$(Build.ArtifactStagingDirectory)/parameters.json'
+              csmFile: '$(Build.ArtifactStagingDirectory)/IaC/azure_container_registry/template.json'
+              csmParametersFile: '$(Build.ArtifactStagingDirectory)/IaC/azure_container_registry/parameters.json'
               #overrideParameters: '-siteName $(siteName) -administratorLogin $(adminUser) -administratorLoginPassword $(ARM_PASS)'
               deploymentMode: 'Incremental'
 
