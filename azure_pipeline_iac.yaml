@@ -5,16 +5,21 @@ trigger:
 pool: 
   vmImage: 'ubuntu-latest'
 
+parameters:
+- name: doThing
+  default: true # value passed to the condition
+  type: boolean
+
 variables:
   serviceConnARM: sc-ARM
-  HAS_RUN: ${{flag}}
+  HAS_RUN: $(flag)
   repository_dev: spring-boot-app/dev
   repository_prod: spring-boot-app/prod
   defaultTag: latest
 
 stages:
   - stage: CREATE_INFRAESTRUCTURE
-    condition: and(eq(variables['Build.SourceBranchName'],'dev'), $(HAS_RUN))
+    condition: and(eq(variables['Build.SourceBranchName'],'dev'), eq('${{ parameters.doThing }}', 'true'))
 
     jobs:
       - job: IAC
