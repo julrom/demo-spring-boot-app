@@ -12,7 +12,7 @@ variables:
   defaultTag: latest
 
 stages:
-  - stage: CREATE INFRAESTRUCTURE
+  - stage: CREATE_INFRAESTRUCTURE
     condition: eq(variables['Build.SourceBranchName'],'dev')
 
     jobs:
