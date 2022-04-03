@@ -1,0 +1,48 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "registryName": {
+            "value": {
+                "type": "String",
+                "value": "juliohacr2"
+            }
+        },
+        "registryLocation": {
+            "value": {
+                "type": "String",
+                "value": "centralus"
+            }
+        },
+        "zoneRedundancy": {
+            "value": {
+                "type": "String",
+                "value": "disabled"
+            }
+        },
+        "registrySku": {
+            "value": {
+                "type": "String",
+                "value": "Basic"
+            }
+        },
+        "registryApiVersion": {
+            "value": {
+                "type": "String",
+                "value": "2020-11-01-preview"
+            }
+        },
+        "tags": {
+            "value": {
+                "type": "Object",
+                "value": {}
+            }
+        },
+        "publicNetworkAccess": {
+            "value": {
+                "type": "String",
+                "value": "Enabled"
+            }
+        }
+    }
+}

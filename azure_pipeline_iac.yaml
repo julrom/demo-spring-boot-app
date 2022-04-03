@@ -1,0 +1,34 @@
+trigger:
+  - dev
+  - master
+
+pool: 
+  vmImage: 'ubuntu-latest'
+
+variables:
+  serviceConnARM: sc-ARM
+  repository_dev: spring-boot-app/dev
+  repository_prod: spring-boot-app/prod
+  defaultTag: latest
+
+stages:
+  - stage: CREATE INFRAESTRUCTURE
+    condition: eq(variables['Build.SourceBranchName'],'dev')
+
+    jobs:
+      - job: IAC
+        displayName: "Resoruce group and acr"
+
+        steps:
+          - task: AzureCLI@2
+            displayName: Azure CLI
+            inputs:
+              azureSubscription: $(serviceConnARM)
+              scriptType: ps
+              scriptLocation: inlineScript
+              inlineScript: |
+                az --version
+                az account show
+
+
+ 
