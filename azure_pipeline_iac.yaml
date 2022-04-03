@@ -7,14 +7,14 @@ pool:
 
 variables:
   serviceConnARM: sc-ARM
-  HAS_RUN: $(flag)
+  HAS_RUN: ${{flag}}
   repository_dev: spring-boot-app/dev
   repository_prod: spring-boot-app/prod
   defaultTag: latest
 
 stages:
   - stage: CREATE_INFRAESTRUCTURE
-    condition: and(eq(variables['Build.SourceBranchName'],'dev'), $(flag))
+    condition: and(eq(variables['Build.SourceBranchName'],'dev'), $(HAS_RUN))
 
     jobs:
       - job: IAC
