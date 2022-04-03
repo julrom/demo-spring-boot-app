@@ -5,6 +5,13 @@ trigger:
 pool: 
   vmImage: 'ubuntu-latest'
 
+parameters:
+  - name: mode
+    displayName: "mode"
+    type: boolean
+    default: $(flag)
+      
+
 variables:
   hasRun: $(flag)
   serviceConnection: sc-acr
@@ -14,7 +21,7 @@ variables:
 
 stages:
   - stage: DEV_BUILD_PUSH_AND_PUBLISH_ARTIFACT
-    condition: and(eq(variables['Build.SourceBranchName'],'dev'), eq($(hasRun), 'true'))
+    condition: and(eq(variables['Build.SourceBranchName'],'dev'), ${{ parameters.mode }}, true))
 
     jobs:
       - job: INSTALL_DEPENDENCIES_DEV
@@ -56,7 +63,7 @@ stages:
               containerRegistry: $(serviceConnection)
 
   - stage: PROD_BUILD_PUSH_AND_PUBLISH_ARTIFACT
-    condition: and(eq(variables['Build.SourceBranchName'],'master'), eq($(hasRun), 'true'))
+    condition: and(eq(variables['Build.SourceBranchName'],'master'), ${{ parameters.mode }}, true))
 
     jobs:
       - job: INSTALL_DEPENDENCIES_PROD
