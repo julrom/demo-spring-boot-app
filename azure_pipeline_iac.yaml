@@ -7,14 +7,14 @@ pool:
 
 parameters:
 - name: doThing
-  default: true # value passed to the condition
+  default: false # value passed to the condition
   type: boolean
 
 variables:
   serviceConnARM: sc-ARM
-  HAS_RUN: $(flag)
   repository_dev: spring-boot-app/dev
   repository_prod: spring-boot-app/prod
+  resourceGroup: 'rg-acr-test'
   defaultTag: latest
 
 stages:
@@ -49,13 +49,38 @@ stages:
               azureResourceManagerConnection: $(serviceConnARM)
               #subscriptionId: '<your-subscription-id>'
               action: 'Create Or Update Resource Group'
-              resourceGroupName: 'rg-acr-test'
+              resourceGroupName: $(resourceGroup)
               location: 'centralus'
               templateLocation: 'Linked artifact'
               csmFile: '$(Build.ArtifactStagingDirectory)/IaC/azure_container_registry/template.json'
               csmParametersFile: '$(Build.ArtifactStagingDirectory)/IaC/azure_container_registry/parameters.json'
               #overrideParameters: '-siteName $(siteName) -administratorLogin $(adminUser) -administratorLoginPassword $(ARM_PASS)'
               deploymentMode: 'Incremental'
+
+  - stage: CLEAN_RESOURCES
+    condition: and(eq(variables['Build.SourceBranchName'],'dev'), eq('${{ parameters.doThing }}', 'true'))
+    jobs:
+        - job: IAC
+          displayName: "Resoruce group and acr"
+
+          steps:
+          - task: AzureCLI@2
+            displayName: List resources in the resource group
+            inputs:
+              azureSubscription: $(serviceConnARM)
+              scriptType: pscore
+              scriptLocation: inlineScript
+              inlineScript: |
+                az resource list --resource-group $(resourceGroup) --output table
+
+          - task: AzureCLI@2
+            displayName: Delete resouce group and all the inside resources
+            inputs:
+              azureSubscription: $(serviceConnARM)
+              scriptType: pscore
+              scriptLocation: inlineScript
+              inlineScript: |
+                az group delete --name $(resourceGroup)
 
 
  
