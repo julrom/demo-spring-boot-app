@@ -7,13 +7,14 @@ pool:
 
 variables:
   serviceConnARM: sc-ARM
+  HAS_RUN: $(flag)
   repository_dev: spring-boot-app/dev
   repository_prod: spring-boot-app/prod
   defaultTag: latest
 
 stages:
   - stage: CREATE_INFRAESTRUCTURE
-    condition: eq(variables['Build.SourceBranchName'],'dev')
+    condition: and(eq(variables['Build.SourceBranchName'],'dev'), $(HAS_RUN))
 
     jobs:
       - job: IAC
@@ -29,6 +30,27 @@ stages:
               inlineScript: |
                 az --version
                 az account show
+
+          - task: CopyFiles@2
+            displayName: Copying ARM templates
+            inputs:
+              SourceFolder: 'IaC\azure_container_registry/'
+              Contents: '**'
+              TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+          - task: AzureResourceManagerTemplateDeployment@3
+            inputs:
+              deploymentScope: 'Resource Group'
+              azureResourceManagerConnection: $(serviceConnARM)
+              #subscriptionId: '<your-subscription-id>'
+              action: 'Create Or Update Resource Group'
+              resourceGroupName: 'rg-acr-test'
+              location: 'centralus'
+              templateLocation: 'Linked artifact'
+              csmFile: '$(Build.ArtifactStagingDirectory)/template.json'
+              csmParametersFile: '$(Build.ArtifactStagingDirectory)/parameters.json'
+              #overrideParameters: '-siteName $(siteName) -administratorLogin $(adminUser) -administratorLoginPassword $(ARM_PASS)'
+              deploymentMode: 'Incremental'
 
 
  

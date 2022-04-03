@@ -13,7 +13,7 @@ variables:
 
 stages:
   - stage: DEV_BUILD_PUSH_AND_PUBLISH_ARTIFACT
-    condition: eq(variables['Build.SourceBranchName'],'dev')
+    condition: and(eq(variables['Build.SourceBranchName'],'dev'), $(isStopped))
 
     jobs:
       - job: INSTALL_DEPENDENCIES_DEV
