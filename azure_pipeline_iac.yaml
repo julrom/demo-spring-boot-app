@@ -7,7 +7,7 @@ pool:
 
 parameters:
 - name: doThing
-  default: false # value passed to the condition
+  default: true # value passed to the condition
   type: boolean
 
 variables:
@@ -44,6 +44,7 @@ stages:
               TargetFolder: '$(Build.ArtifactStagingDirectory)'
 
           - task: AzureResourceManagerTemplateDeployment@3
+            displayName: 'Deployment Container Registry'
             inputs:
               deploymentScope: 'Resource Group'
               azureResourceManagerConnection: $(serviceConnARM)
@@ -57,8 +58,17 @@ stages:
               #overrideParameters: '-siteName $(siteName) -administratorLogin $(adminUser) -administratorLoginPassword $(ARM_PASS)'
               deploymentMode: 'Incremental'
 
+          - task: AzurePowerShell@5
+            displayName: 'Deployment App service'
+            inputs:
+              azureSubscription: $(serviceConnARM)
+              ScriptType: 'FilePath'
+              ScriptPath: './Deploy-AzTemplate.ps1'
+              ScriptArguments: -Location 'centralus' -ResourceGroupName $(resourceGroup) -TemplateFile '$(Build.ArtifactStagingDirectory)/IaC/azure_container_registry/template.json'
+              azurePowerShellVersion: 'LatestVersion'
+
   - stage: CLEAN_RESOURCES
-    condition: and(eq(variables['Build.SourceBranchName'],'dev'), eq('${{ parameters.doThing }}', 'true'))
+    condition: and(eq(variables['Build.SourceBranchName'],'dev'), eq('${{ parameters.doThing }}', 'stop'))
     jobs:
         - job: IAC
           displayName: "Resoruce group and acr"

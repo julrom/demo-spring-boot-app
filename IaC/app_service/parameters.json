@@ -1,0 +1,27 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "sites_demo_spring_app_name": {
+            "value": null
+        },
+        "serverfarms_demo_spring_plan_name": {
+            "value": null
+        },
+        "components_demo_spring_app_name": {
+            "value": null
+        },
+        "autoscalesettings_demo_spring_plan_Autoscale_256_name": {
+            "value": null
+        },
+        "smartdetectoralertrules_failure_anomalies___demo_spring_app_name": {
+            "value": null
+        },
+        "actiongroups_application_insights_smart_detection_externalid": {
+            "value": null
+        },
+        "workspaces_defaultworkspace_8f7dd6a7_251b_4a31_ad5b_b58c6bdd725f_cus_externalid": {
+            "value": null
+        }
+    }
+}
