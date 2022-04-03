@@ -14,7 +14,7 @@ variables:
 
 stages:
   - stage: CREATE_INFRAESTRUCTURE
-    condition: and(eq(variables['Build.SourceBranchName'],'dev'), $(HAS_RUN))
+    condition: and(eq(variables['Build.SourceBranchName'],'dev'), $(flag))
 
     jobs:
       - job: IAC
