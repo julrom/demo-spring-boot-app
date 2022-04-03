@@ -3,39 +3,25 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "registryName": {
-            "value": {
-                "value": "juliohacrqq"
-            }
+            "value": "juliohacrqq"
         },
         "registryLocation": {
-            "value": {
-                "value": "centralus"
-            }
+            "value": "centralus"
         },
         "zoneRedundancy": {
-            "value": {
-                "value": "disabled"
-            }
+            "value": "disabled"
         },
         "registrySku": {
-            "value": {
-                "value": "Basic"
-            }
+            "value": "Basic"
         },
         "registryApiVersion": {
-            "value": {
-                "value": "2020-11-01-preview"
-            }
+            "value": "2020-11-01-preview"
         },
         "tags": {
-            "value": {
-                "value": {}
-            }
+            "value": {}
         },
         "publicNetworkAccess": {
-            "value": {
-                "value": "Enabled"
-            }
+            "value": "Enabled"
         }
     }
 }
