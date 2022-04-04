@@ -507,7 +507,7 @@
                 "hyperV": false,
                 "siteConfig": {
                     "numberOfWorkers": 1,
-                    "linuxFxVersion": "DOCKER|juliohacr.azurecr.io/spring-boot-app/prod:latest",
+                    "linuxFxVersion": "DOCKER|demospringcr.azurecr.io/spring-boot-app/prod:latest",
                     "acrUseManagedIdentityCreds": false,
                     "alwaysOn": true,
                     "http20Enabled": false,
@@ -574,7 +574,7 @@
                     "hostingstart.html"
                 ],
                 "netFrameworkVersion": "v4.0",
-                "linuxFxVersion": "DOCKER|juliohacr.azurecr.io/spring-boot-app/prod:latest",
+                "linuxFxVersion": "DOCKER|demospringcr.azurecr.io/spring-boot-app/prod:latest",
                 "requestTracingEnabled": false,
                 "remoteDebuggingEnabled": false,
                 "remoteDebuggingVersion": "VS2019",
@@ -709,7 +709,7 @@
                 "hyperV": false,
                 "siteConfig": {
                     "numberOfWorkers": 1,
-                    "linuxFxVersion": "DOCKER|juliohacr.azurecr.io/spring-boot-app/dev:latest",
+                    "linuxFxVersion": "DOCKER|demospringcr.azurecr.io/spring-boot-app/dev:latest",
                     "acrUseManagedIdentityCreds": false,
                     "alwaysOn": true,
                     "http20Enabled": false,
@@ -779,7 +779,7 @@
                     "hostingstart.html"
                 ],
                 "netFrameworkVersion": "v4.0",
-                "linuxFxVersion": "DOCKER|juliohacr.azurecr.io/spring-boot-app/dev:latest",
+                "linuxFxVersion": "DOCKER|demospringcr.azurecr.io/spring-boot-app/dev:latest",
                 "requestTracingEnabled": false,
                 "remoteDebuggingEnabled": false,
                 "remoteDebuggingVersion": "VS2019",

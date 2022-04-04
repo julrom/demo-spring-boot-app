@@ -2,24 +2,30 @@ trigger:
   - dev
   - master
 
-pool: 
-  vmImage: 'ubuntu-latest'
+pool:
+  vmImage: "ubuntu-latest"
 
 parameters:
-- name: doThing
-  default: true # value passed to the condition
-  type: boolean
+  - name: isActive
+    displayName: "isActive"
+    default: false # value passed to the condition
+    type: boolean
+
+  - name: isCleanMode
+    displayName: "isCleanMode"
+    default: false # value passed to the condition
+    type: boolean
 
 variables:
   serviceConnARM: sc-ARM
   repository_dev: spring-boot-app/dev
   repository_prod: spring-boot-app/prod
-  resourceGroup: 'rg-acr-test'
+  resourceGroup: "rg-demo-spring"
   defaultTag: latest
 
 stages:
   - stage: CREATE_INFRAESTRUCTURE
-    condition: and(eq(variables['Build.SourceBranchName'],'dev'), eq('${{ parameters.doThing }}', 'true'))
+    condition: and(eq('${{ parameters.isActive }}', true), eq('${{ parameters.isCleanMode }}', false))
 
     jobs:
       - job: IAC
@@ -40,23 +46,38 @@ stages:
             displayName: Copying ARM templates
             inputs:
               #SourceFolder: 'IaC\azure_container_registry/'
-              Contents: '**/IaC/**'
-              TargetFolder: '$(Build.ArtifactStagingDirectory)'
+              Contents: "**/IaC/**"
+              TargetFolder: "$(Build.ArtifactStagingDirectory)"
 
           - task: AzureResourceManagerTemplateDeployment@3
-            displayName: 'Deployment Container Registry'
+            displayName: "Deploying Container Registry"
             inputs:
-              deploymentScope: 'Resource Group'
+              deploymentScope: "Resource Group"
               azureResourceManagerConnection: $(serviceConnARM)
               #subscriptionId: '<your-subscription-id>'
-              action: 'Create Or Update Resource Group'
+              action: "Create Or Update Resource Group"
               resourceGroupName: $(resourceGroup)
-              location: 'centralus'
-              templateLocation: 'Linked artifact'
-              csmFile: '$(Build.ArtifactStagingDirectory)/IaC/azure_container_registry/template.json'
-              csmParametersFile: '$(Build.ArtifactStagingDirectory)/IaC/azure_container_registry/parameters.json'
+              location: "centralus"
+              templateLocation: "Linked artifact"
+              csmFile: "$(Build.ArtifactStagingDirectory)/IaC/azure_container_registry/template.json"
+              csmParametersFile: "$(Build.ArtifactStagingDirectory)/IaC/azure_container_registry/parameters.json"
               #overrideParameters: '-siteName $(siteName) -administratorLogin $(adminUser) -administratorLoginPassword $(ARM_PASS)'
-              deploymentMode: 'Incremental'
+              deploymentMode: "Incremental"
+
+          - task: AzureResourceManagerTemplateDeployment@3
+            displayName: "Deploying app service"
+            inputs:
+              deploymentScope: "Resource Group"
+              azureResourceManagerConnection: $(serviceConnARM)
+              #subscriptionId: '<your-subscription-id>'
+              action: "Create Or Update Resource Group"
+              resourceGroupName: $(resourceGroup)
+              location: "centralus"
+              templateLocation: "Linked artifact"
+              csmFile: "$(Build.ArtifactStagingDirectory)/IaC/app_service/template.json"
+              csmParametersFile: "$(Build.ArtifactStagingDirectory)/IaC/app_service/parameters.json"
+              #overrideParameters: '-siteName $(siteName) -administratorLogin $(adminUser) -administratorLoginPassword $(ARM_PASS)'
+              deploymentMode: "Incremental"
 
           - task: AzurePowerShell@5
             displayName: 'Deployment App service'
@@ -68,12 +89,13 @@ stages:
               azurePowerShellVersion: 'LatestVersion'
 
   - stage: CLEAN_RESOURCES
-    condition: and(eq(variables['Build.SourceBranchName'],'dev'), eq('${{ parameters.doThing }}', 'stop'))
-    jobs:
-        - job: IAC
-          displayName: "Resoruce group and acr"
+    condition: and(eq('${{ parameters.isActive }}', true), eq('${{ parameters.isCleanMode }}', true))
 
-          steps:
+    jobs:
+      - job: IAC
+        displayName: "Cleaning process"
+
+        steps:
           - task: AzureCLI@2
             displayName: List resources in the resource group
             inputs:
@@ -90,7 +112,4 @@ stages:
               scriptType: pscore
               scriptLocation: inlineScript
               inlineScript: |
-                az group delete --name $(resourceGroup)
-
-
- 
+                az group delete --name $(resourceGroup) --yes

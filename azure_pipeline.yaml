@@ -6,12 +6,11 @@ pool:
   vmImage: 'ubuntu-latest'
 
 parameters:
-  - name: mode
-    displayName: "mode"
+  - name: isActive
+    displayName: "isActive"
+    default: true # value passed to the condition
     type: boolean
-    default: false
       
-
 variables:
   serviceConnection: sc-acr
   repository_dev: spring-boot-app/dev
@@ -20,7 +19,7 @@ variables:
 
 stages:
   - stage: DEV_BUILD_PUSH_AND_PUBLISH_ARTIFACT
-    condition: and(eq(variables['Build.SourceBranchName'],'dev'), eq(${{ parameters.mode }}, true))
+    condition: and(eq(variables['Build.SourceBranchName'],'dev'), eq('${{ parameters.isActive }}', true))
 
     jobs:
       - job: INSTALL_DEPENDENCIES_DEV
@@ -62,8 +61,8 @@ stages:
               containerRegistry: $(serviceConnection)
 
   - stage: PROD_BUILD_PUSH_AND_PUBLISH_ARTIFACT
-    condition: and(eq(variables['Build.SourceBranchName'],'master'), eq(${{ parameters.mode }}, true))
-
+    condition: and(eq(variables['Build.SourceBranchName'],'master'), eq('${{ parameters.isActive }}', true))
+    
     jobs:
       - job: INSTALL_DEPENDENCIES_PROD
         displayName: "Login, Build, Push, Logout"
@@ -102,4 +101,15 @@ stages:
             inputs:
               command: logout
               containerRegistry: $(serviceConnection)
+          
+          - task: CopyFiles@2
+            displayName: "Copy Files to: $(Build.ArtifactStagingDirectory)"
+            inputs:
+              Contents: "**/IaC/**"
+              TargetFolder: $(Build.ArtifactStagingDirectory)
+
+          - task: PublishBuildArtifacts@1
+            displayName: "Publish Artifact: deploy"
+            inputs:
+              ArtifactName: deploy
  
