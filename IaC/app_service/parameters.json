@@ -5,23 +5,11 @@
         "sites_demo_spring_app_name": {
             "value": "demo-spring-app"
         },
-        "serverfarms_demo_spring_plan_name": {
-            "value": "demo-spring-plan"
+        "serverfarms_demo_spring_service_plan_name": {
+            "value": "demo-spring-service-plan"
         },
-        "components_demo_spring_app_name": {
-            "value": "demo-spring-app"
-        },
-        "autoscalesettings_demo_spring_plan_Autoscale_256_name": {
-            "value": "demo-spring-plan-Autoscale-256"
-        },
-        "smartdetectoralertrules_failure_anomalies___demo_spring_app_name": {
-            "value": "failure anomalies - demo-spring-app"
-        },
-        "actiongroups_application_insights_smart_detection_externalid": {
-            "value": "/subscriptions/8f7dd6a7-251b-4a31-ad5b-b58c6bdd725f/resourceGroups/jh-az-400-rg/providers/microsoft.insights/actiongroups/application insights smart detection"
-        },
-        "workspaces_defaultworkspace_8f7dd6a7_251b_4a31_ad5b_b58c6bdd725f_cus_externalid": {
-            "value": "/subscriptions/8f7dd6a7-251b-4a31-ad5b-b58c6bdd725f/resourceGroups/defaultresourcegroup-cus/providers/microsoft.operationalinsights/workspaces/defaultworkspace-8f7dd6a7-251b-4a31-ad5b-b58c6bdd725f-cus"
+        "autoscalesettings_demo_spring_service_plan_Autoscale_233_name": {
+            "value": "demo-spring-service-plan-Autoscale-233"
         }
     }
 }
