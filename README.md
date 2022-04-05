@@ -43,7 +43,8 @@ To see the frontend, navigate to http://localhost:8080. You are immediately redi
 
 
 # **Necessary Project files and folders**
-![image](https://user-images.githubusercontent.com/19845873/161797657-63055952-2c39-41cb-9cbf-3fb527a3bdb7.png)
+![structure_folders](https://user-images.githubusercontent.com/19845873/161838415-be330d8a-979a-4480-86bc-a864c8c79755.png)
+
 
 - **IaC**: Contains all the ARM templates to deploy Azure Container Registry, App sevice plan, App Service Plan, Autoscale  and role assignment.
 
