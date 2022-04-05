@@ -98,35 +98,51 @@ Project settings -> Service connections -> New Service connections -> Azure Reso
 **Optional if you prefer to use cloud shell (Bash) to deploy the ARM templates**
 1. Create the resources groups
 
-`$az group create --location centralus --name rg-demo-spring-acr`
-`$az group create --location centralus --name rg-demo-spring-app`
+<code>$az group create --location centralus --name rg-demo-spring-acr</code><br/>
+<code>$az group create --location centralus --name rg-demo-spring-app</code><br/>
 
 2. Upload the templates
 3. Deploy the ARM template using Azure CLI
 
 - Azure Container Registry
-`$IaC/azure_container_registry`
-`$az deployment group create \`
-  `--name deployment-demo-spring-acr \`
-  `--resource-group rg-demo-spring-acr \`
-  `--template-file  template.json \`
-  `--parameters '@parameters.json'`
+
+<code>$cd IaC/azure_container_registry</code><br/>
+<pre>
+  <p>
+    $az deployment group create \
+    --name deployment-demo-spring-acr \
+    --resource-group rg-demo-spring-acr \
+    --template-file  template.json \
+    --parameters '@parameters.json'
+  </p>
+</pre>
+
+
 
 - App sevice plan, App Service Plan, Autoscale
-`$cd IaC/app_service`
-`$az deployment group create \`
-`--name deployment-demo-spring-app \`
-`--resource-group rg-demo-spring-app \`
-`--template-file  template.json \`
-`--parameters '@parameters.json'`
+
+<code>$cd IaC/app_service</code><br/>
+
+<pre>
+  <p>
+    $az deployment group create \
+    --name deployment-demo-spring-app \
+    --resource-group rg-demo-spring-app \
+    --template-file  template.json \
+    --parameters '@parameters.json'
+  </p>
+</pre>
 
 - Role Assignment system managed identity to pull images from ACR
-`$cd IaC/role_assignment`
-`$az deployment group create --resource-group rg-demo-spring-acr --template-file template.json`
+
+<code>$cd IaC/role_assignment</code><br/>
+
+<code>$az deployment group create --resource-group rg-demo-spring-acr --template-file template.json</code>
 
 - Cleanup / detroy
-`az group delete --name rg-demo-spring-acr`
-`az group delete --name rg-demo-spring-app`
+
+<code>az group delete --name rg-demo-spring-acr</code><br/>
+<code>az group delete --name rg-demo-spring-app</code><br/>
 
 ## CI Pipeline
 
