@@ -1,0 +1,67 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: demo-spring-app
+  labels:
+    app: demo-spring-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: demo-spring-app
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: demo-spring-app
+    spec:
+      containers:
+        - name: demo-spring-app
+          image: demospringcr.azurecr.io/spring-boot-app/prod
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8080
+          resources: 
+            limits:
+              cpu: 1500m
+              memory: 2Gi
+            requests:
+              cpu: 200m
+              memory: 300Mi
+      imagePullSecrets:
+        - name: acr-secret
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: demo-spring-app
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8080
+  selector:
+    app: demo-spring-app
+---
+apiVersion: autoscaling/v2beta2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: demo-spring-app
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: demo-spring-app
+  minReplicas: 2
+  maxReplicas: 6
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 80

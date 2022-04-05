@@ -1,0 +1,25 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+        "appServiceName": {
+            "defaultValue": "demo-spring-app",
+            "type": "String"
+        },
+        "appServiceResourceGroup": {
+            "defaultValue": "rg-demo-spring-app",
+            "type": "String"
+        }
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Authorization/roleAssignments",
+            "apiVersion": "2018-09-01-preview",
+            "name": "[guid(resourceGroup().id)]",
+            "properties": {
+                "roleDefinitionId": "[concat('/subscriptions/', subscription().subscriptionId, '/providers/Microsoft.Authorization/roleDefinitions/', '7f951dda-4ed3-4680-a7ca-43fe172d538d')]",
+                "principalId": "[reference(resourceId(parameters('appServiceResourceGroup'), 'Microsoft.Web/sites', parameters('appServiceName')), '2021-03-01', 'Full').identity.principalId]"
+            }
+        }
+    ]
+}

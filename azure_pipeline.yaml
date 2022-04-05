@@ -6,13 +6,15 @@ pool:
   vmImage: 'ubuntu-latest'
 
 parameters:
+  # Optional if you want to control execution of this pipeline instead of use trigger branch
   - name: isActive
     displayName: "isActive"
     default: true # value passed to the condition
     type: boolean
       
 variables:
-  serviceConnection: sc-acr
+  serviceConnection: sc-acr # Service connection to Azure Container Registry (ACR)
+  # ACR repositories
   repository_dev: spring-boot-app/dev
   repository_prod: spring-boot-app/prod
   defaultTag: latest
@@ -106,6 +108,13 @@ stages:
             displayName: "Copy Files to: $(Build.ArtifactStagingDirectory)"
             inputs:
               Contents: "**/IaC/**"
+              TargetFolder: $(Build.ArtifactStagingDirectory)
+          
+          # Optional: Could be used on release to deploy on Kubernetes Cluster
+          - task: CopyFiles@2
+            displayName: 'Copy Files to: $(Build.ArtifactStagingDirectory)'
+            inputs:
+              Contents: '**/kubernetes/**'
               TargetFolder: $(Build.ArtifactStagingDirectory)
 
           - task: PublishBuildArtifacts@1

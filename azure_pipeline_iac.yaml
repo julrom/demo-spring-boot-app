@@ -6,19 +6,22 @@ pool:
   vmImage: "ubuntu-latest"
 
 parameters:
+  # Optional if you want to control execution of this pipeline instead of use trigger branch
   - name: isActive
     displayName: "isActive"
     default: false # value passed to the condition
     type: boolean
 
+  # Set true to clean all created resources
   - name: isCleanMode
     displayName: "isCleanMode"
     default: false # value passed to the condition
     type: boolean
 
 variables:
-  serviceConnARM: sc-ARM
-  resourceGroup: "rg-demo-spring"
+  serviceConnARM: sc-ARM # Service connection to deploy to Azure subscription
+  resourceGroupACR: "rg-demo-spring-acr"
+  resourceGroupApp: "rg-demo-spring-app"
 
 stages:
   - stage: CREATE_INFRAESTRUCTURE
@@ -29,52 +32,52 @@ stages:
         displayName: "Resoruce group and acr"
 
         steps:
-
           - task: CopyFiles@2
             displayName: Copying ARM templates
             inputs:
-              #SourceFolder: 'IaC\azure_container_registry/'
               Contents: "**/IaC/**"
               TargetFolder: "$(Build.ArtifactStagingDirectory)"
 
-          # - task: AzureResourceManagerTemplateDeployment@3
-          #   displayName: "Deploying Container Registry"
-          #   inputs:
-          #     deploymentScope: "Resource Group"
-          #     azureResourceManagerConnection: $(serviceConnARM)
-          #     #subscriptionId: '<your-subscription-id>'
-          #     action: "Create Or Update Resource Group"
-          #     resourceGroupName: $(resourceGroup)
-          #     location: "centralus"
-          #     templateLocation: "Linked artifact"
-          #     csmFile: "$(Build.ArtifactStagingDirectory)/IaC/azure_container_registry/template.json"
-          #     csmParametersFile: "$(Build.ArtifactStagingDirectory)/IaC/azure_container_registry/parameters.json"
-          #     #overrideParameters: '-siteName $(siteName) -administratorLogin $(adminUser) -administratorLoginPassword $(ARM_PASS)'
-          #     deploymentMode: "Incremental"
+          - task: AzureResourceManagerTemplateDeployment@3
+            displayName: "Deploying Azure Container Registry"
+            inputs:
+              deploymentScope: "Resource Group"
+              azureResourceManagerConnection: $(serviceConnARM)
+              action: "Create Or Update Resource Group"
+              resourceGroupName: $(resourceGroupACR)
+              location: "centralus"
+              templateLocation: "Linked artifact"
+              csmFile: "$(Build.ArtifactStagingDirectory)/IaC/azure_container_registry/template.json"
+              csmParametersFile: "$(Build.ArtifactStagingDirectory)/IaC/azure_container_registry/parameters.json"
+              #overrideParameters: '-parameterName1 $(localVar1) -parameterName2 $(localVar2)'
+              deploymentMode: "Incremental"
 
           - task: AzureResourceManagerTemplateDeployment@3
             displayName: "Deploying app service"
             inputs:
               deploymentScope: "Resource Group"
               azureResourceManagerConnection: $(serviceConnARM)
-              #subscriptionId: '<your-subscription-id>'
               action: "Create Or Update Resource Group"
-              resourceGroupName: $(resourceGroup)
+              resourceGroupName: $(resourceGroupApp)
               location: "centralus"
               templateLocation: "Linked artifact"
               csmFile: "$(Build.ArtifactStagingDirectory)/IaC/app_service/template.json"
               csmParametersFile: "$(Build.ArtifactStagingDirectory)/IaC/app_service/parameters.json"
-              #overrideParameters: '-siteName $(siteName) -administratorLogin $(adminUser) -administratorLoginPassword $(ARM_PASS)'
               deploymentMode: "Incremental"
 
-          - task: AzurePowerShell@5
-            displayName: 'Deployment App service'
+          - task: AzureResourceManagerTemplateDeployment@3
+            displayName: "Assignment ACR pull role for the app service"
             inputs:
-              azureSubscription: $(serviceConnARM)
-              ScriptType: 'FilePath'
-              ScriptPath: './Deploy-AzTemplate.ps1'
-              ScriptArguments: -Location 'centralus' -ResourceGroupName $(resourceGroup) -TemplateFile '$(Build.ArtifactStagingDirectory)/IaC/azure_container_registry/template.json'
-              azurePowerShellVersion: 'LatestVersion'
+              deploymentScope: "Resource Group"
+              azureResourceManagerConnection: $(serviceConnARM)
+              action: "Create Or Update Resource Group"
+              resourceGroupName: $(resourceGroupACR)
+              location: "centralus"
+              templateLocation: "Linked artifact"
+              csmFile: "$(Build.ArtifactStagingDirectory)/IaC/app_service/template.json"
+              csmParametersFile: "$(Build.ArtifactStagingDirectory)/IaC/role_assignment/parameters.json"
+              overrideParameters: '-appServiceResourceGroup $(resourceGroupApp)'
+              deploymentMode: "Incremental"
 
   - stage: CLEAN_RESOURCES
     condition: and(eq('${{ parameters.isActive }}', true), eq('${{ parameters.isCleanMode }}', true))
@@ -91,7 +94,8 @@ stages:
               scriptType: pscore
               scriptLocation: inlineScript
               inlineScript: |
-                az resource list --resource-group $(resourceGroup) --output table
+                az resource list --resource-group $(resourceGroupACR) --output table
+                az resource list --resource-group $(resourceGroupApp) --output table
 
           - task: AzureCLI@2
             displayName: Delete resouce group and all the inside resources
@@ -100,4 +104,5 @@ stages:
               scriptType: pscore
               scriptLocation: inlineScript
               inlineScript: |
-                az group delete --name $(resourceGroup) --yes
+                az group delete --name $(resourceGroupACR) --yes
+                az group delete --name $(resourceGroupApp) --yes
