@@ -1,21 +1,17 @@
-trigger:
-  - dev
-  - master
-
 pool:
   vmImage: "ubuntu-latest"
 
 parameters:
-  # Optional if you want to control execution of this pipeline instead of use trigger branch
-  - name: isActive
-    displayName: "isActive"
-    default: false # value passed to the condition
+  # Optional if you want to control the manual execution of the pipeline instead of using trigger branch
+  - name: isDeployment
+    displayName: "isDeployment"
+    default: false
     type: boolean
 
-  # Set true to clean all created resources
-  - name: isCleanMode
-    displayName: "isCleanMode"
-    default: false # value passed to the condition
+  # Set true to detroy all created resources
+  - name: isCleanup
+    displayName: "isCleanup"
+    default: false
     type: boolean
 
 variables:
@@ -25,7 +21,7 @@ variables:
 
 stages:
   - stage: CREATE_INFRAESTRUCTURE
-    condition: and(eq('${{ parameters.isActive }}', true), eq('${{ parameters.isCleanMode }}', false))
+    condition: and(eq('${{ parameters.isDeployment }}', true), eq('${{ parameters.isCleanup }}', false))
 
     jobs:
       - job: IAC
@@ -80,7 +76,7 @@ stages:
               deploymentMode: "Incremental"
 
   - stage: CLEAN_RESOURCES
-    condition: and(eq('${{ parameters.isActive }}', true), eq('${{ parameters.isCleanMode }}', true))
+    condition: and(eq('${{ parameters.isDeployment }}', false), eq('${{ parameters.isCleanup }}', true))
 
     jobs:
       - job: IAC
