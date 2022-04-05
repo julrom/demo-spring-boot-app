@@ -61,6 +61,7 @@ stages:
               csmParametersFile: "$(Build.ArtifactStagingDirectory)/IaC/app_service/parameters.json"
               deploymentMode: "Incremental"
 
+          #It will run is the service principal "serviceConnARM" has the permissiona to assign and create roles
           - task: AzureResourceManagerTemplateDeployment@3
             displayName: "Assigning ACR pull role for the app service"
             inputs:

@@ -4,13 +4,6 @@ trigger:
 
 pool: 
   vmImage: 'ubuntu-latest'
-
-parameters:
-  # Optional if you want to control execution of this pipeline instead of use trigger branch
-  - name: isActive
-    displayName: "isActive"
-    default: true # value passed to the condition
-    type: boolean
       
 variables:
   serviceConnection: sc-acr # Service connection to Azure Container Registry (ACR)
@@ -21,7 +14,7 @@ variables:
 
 stages:
   - stage: DEV_BUILD_PUSH_AND_PUBLISH_ARTIFACT
-    condition: and(eq(variables['Build.SourceBranchName'],'dev'), eq('${{ parameters.isActive }}', true))
+    condition: eq(variables['Build.SourceBranchName'],'dev')
 
     jobs:
       - job: INSTALL_DEPENDENCIES_DEV
@@ -63,7 +56,7 @@ stages:
               containerRegistry: $(serviceConnection)
 
   - stage: PROD_BUILD_PUSH_AND_PUBLISH_ARTIFACT
-    condition: and(eq(variables['Build.SourceBranchName'],'master'), eq('${{ parameters.isActive }}', true))
+    condition: eq(variables['Build.SourceBranchName'],'master')
     
     jobs:
       - job: INSTALL_DEPENDENCIES_PROD
