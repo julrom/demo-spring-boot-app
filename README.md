@@ -39,19 +39,19 @@ To see the frontend, navigate to http://localhost:8080. You are immediately redi
 
 
 # **Necessary Project files and folders**
-![image.png](/.attachments/image-5e66d5c9-f9b4-4974-8cfd-946296b8503d.png)
+![image](https://user-images.githubusercontent.com/19845873/161797657-63055952-2c39-41cb-9cbf-3fb527a3bdb7.png)
 
 - **IaC**: Contains all the ARM templates to deploy Azure Container Registry, App sevice plan, App Service Plan, Autoscale  and role assignment.
-![image.png](/.attachments/image-b4536fd6-6cd5-40d7-9cc2-3fbc92ec090e.png)
+![image](https://user-images.githubusercontent.com/19845873/161797830-abbeccd6-161a-43b8-b99c-22684bce28de.png)
 
 - **kubernetes (optional)**:  Contains the yaml manifests  files to deploy on K8 (deployment, service and HPA). Note the cluster, namespaces and the acr-secret must be previously created, it is not cover for this assignment.
-![image.png](/.attachments/image-d1a70bd8-57b6-4836-8554-b9c7262cf6fd.png)
+![image](https://user-images.githubusercontent.com/19845873/161797864-333beb0c-d816-4434-ae69-cc1c36eb81ff.png)
 
 - **Azure pipelines and docker files**:
 1.  azure_pipeline_iac.yaml: This pipeline is necesary to deploy the Azure Container Registry, Web App + App Service Plan and role assignment. It also allows cleanup/detroy function of the all components created for this assignment.
 2. azure_pipeline.yaml: This is the CI pipeline to Build the docker image and push to the ACR. In addition, this pipeline publishes an artifact that contains the necessary k8 and IaC files if you want to do continuous delivery using the options of the azure devOps release.
 3. Dockerfile: Contains the instrucctions to build the app in a docker image
-![image.png](/.attachments/image-04a756bb-8f5b-4c6c-87bc-76ab5b12c358.png)
+![image](https://user-images.githubusercontent.com/19845873/161797933-c9579493-8620-4bab-a6a5-856b5492dc95.png)
 
 ## Steps:
 ****
