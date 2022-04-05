@@ -103,6 +103,9 @@
                 "[resourceId('Microsoft.Web/serverfarms', parameters('serverfarms_demo_spring_service_plan_name'))]"
             ],
             "kind": "app,linux,container",
+            "identity": {
+                "type": "SystemAssigned"
+            },
             "properties": {
                 "enabled": true,
                 "hostNameSslStates": [
@@ -124,7 +127,7 @@
                 "siteConfig": {
                     "numberOfWorkers": 1,
                     "linuxFxVersion": "DOCKER|demospringcr.azurecr.io/spring-boot-app/prod:latest",
-                    "acrUseManagedIdentityCreds": false,
+                    "acrUseManagedIdentityCreds": true,
                     "alwaysOn": true,
                     "http20Enabled": false,
                     "functionAppScaleLimit": 0,
@@ -135,7 +138,7 @@
                 "clientCertEnabled": false,
                 "clientCertMode": "Required",
                 "hostNamesDisabled": false,
-                "customDomainVerificationId": "787B78AE82F39FD773F1B15766B2F9F94A4B55F3A487B8C69718F5576EB10A9E",
+                "customDomainVerificationId": "AB5BFEBD46468BE5560922250E8B9E9BBA50CC4E694EF4FAAD500937CAEF3DD1",
                 "containerSize": 0,
                 "dailyMemoryTimeQuota": 0,
                 "httpsOnly": false,
@@ -193,8 +196,9 @@
                 "linuxFxVersion": "DOCKER|demospringcr.azurecr.io/spring-boot-app/prod:latest",
                 "requestTracingEnabled": false,
                 "remoteDebuggingEnabled": false,
+                "remoteDebuggingVersion": "VS2019",
                 "httpLoggingEnabled": false,
-                "acrUseManagedIdentityCreds": false,
+                "acrUseManagedIdentityCreds": true,
                 "logsDirectorySizeLimit": 35,
                 "detailedErrorLoggingEnabled": false,
                 "publishingUsername": "$demo-spring-app",
@@ -219,6 +223,7 @@
                 "vnetRouteAllEnabled": false,
                 "vnetPrivatePortsCount": 0,
                 "localMySqlEnabled": false,
+                "managedServiceIdentityId": 1289,
                 "ipSecurityRestrictions": [
                     {
                         "ipAddress": "Any",
@@ -272,6 +277,9 @@
                 "[resourceId('Microsoft.Web/serverfarms', parameters('serverfarms_demo_spring_service_plan_name'))]"
             ],
             "kind": "app,linux,container",
+            "identity": {
+                "type": "SystemAssigned"
+            },
             "properties": {
                 "enabled": true,
                 "hostNameSslStates": [
@@ -292,8 +300,8 @@
                 "hyperV": false,
                 "siteConfig": {
                     "numberOfWorkers": 1,
-                    "linuxFxVersion": "DOCKER|demospringcr.azurecr.io/spring-boot-app/dev:latest",
-                    "acrUseManagedIdentityCreds": false,
+                    "linuxFxVersion": "DOCKER|demospringcr.azurecr.io/spring-boot-app/prod:latest",
+                    "acrUseManagedIdentityCreds": true,
                     "alwaysOn": true,
                     "http20Enabled": false,
                     "functionAppScaleLimit": 0,
@@ -304,7 +312,7 @@
                 "clientCertEnabled": false,
                 "clientCertMode": "Required",
                 "hostNamesDisabled": false,
-                "customDomainVerificationId": "787B78AE82F39FD773F1B15766B2F9F94A4B55F3A487B8C69718F5576EB10A9E",
+                "customDomainVerificationId": "AB5BFEBD46468BE5560922250E8B9E9BBA50CC4E694EF4FAAD500937CAEF3DD1",
                 "containerSize": 0,
                 "dailyMemoryTimeQuota": 0,
                 "httpsOnly": false,
@@ -362,12 +370,12 @@
                     "hostingstart.html"
                 ],
                 "netFrameworkVersion": "v4.0",
-                "linuxFxVersion": "DOCKER|demospringcr.azurecr.io/spring-boot-app/dev:latest",
+                "linuxFxVersion": "DOCKER|demospringcr.azurecr.io/spring-boot-app/prod:latest",
                 "requestTracingEnabled": false,
                 "remoteDebuggingEnabled": false,
                 "remoteDebuggingVersion": "VS2019",
                 "httpLoggingEnabled": false,
-                "acrUseManagedIdentityCreds": false,
+                "acrUseManagedIdentityCreds": true,
                 "logsDirectorySizeLimit": 35,
                 "detailedErrorLoggingEnabled": false,
                 "publishingUsername": "$demo-spring-app__dev",
@@ -392,6 +400,7 @@
                 "vnetRouteAllEnabled": false,
                 "vnetPrivatePortsCount": 0,
                 "localMySqlEnabled": false,
+                "managedServiceIdentityId": 1290,
                 "ipSecurityRestrictions": [
                     {
                         "ipAddress": "Any",
