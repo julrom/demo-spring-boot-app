@@ -29,7 +29,11 @@ To start the application you can just run (`java -jar target/react-and-spring-da
 To see the frontend, navigate to http://localhost:8080. You are immediately redirected to a login form. Log in as `greg/turnquist`
 
 
+
+
 # **Deployment On Azure Devops + Azure Cloud**
+
+[Architecture diagrams and definitions](architectural-definition.md)
 
 ## Requirements:
 - An Azure Cloud and Azure Devops subscription
