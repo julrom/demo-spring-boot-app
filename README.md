@@ -133,7 +133,7 @@ Project settings -> Service connections -> New Service connections -> Azure Reso
   </p>
 </pre>
 
-- Role Assignment system managed identity to pull images from ACR
+## Role Assignment system managed identity to pull images from ACR
 
 <code>$cd IaC/role_assignment</code><br/>
 
@@ -162,7 +162,8 @@ Make a push on trigger branch (dev/master) o run manually, the pipeline will bui
 
 Then could you use blue green deployment with the slots
 
+**Important!!!**
 If you have and error on the assignment task on iac pipeline run this 
-Follow the steps on the Role Assignment system managed identity to pull images from ACR
+Follow the steps on the [Role Assignment system managed](#role-assignment-system-managed-identity-to-pull-images-from-acr) to pull images from ACR
 
 Refresh the web browser and check the app running: http://demo-spring-app.azurewebsites.net/login
