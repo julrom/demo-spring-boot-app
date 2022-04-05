@@ -1,5 +1,5 @@
 # Deployment on APP Service
-![image](https://user-images.githubusercontent.com/19845873/161798795-3e280612-13e1-4bce-8d25-af60aa6df5ca.png)
+![spring-demo-app-service](https://user-images.githubusercontent.com/19845873/161813539-2ef2b15d-eb6d-4e2e-88e4-e4bc7a35df9f.jpg)
 
 This architecture is more in line with the requirement, an app service (PaaS) is used to quickly deploy the application containers, monitor and scale the application, with lower implementation and administration costs.
 
