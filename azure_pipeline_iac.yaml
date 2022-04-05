@@ -61,19 +61,29 @@ stages:
               csmParametersFile: "$(Build.ArtifactStagingDirectory)/IaC/app_service/parameters.json"
               deploymentMode: "Incremental"
 
-          - task: AzureResourceManagerTemplateDeployment@3
+          # - task: AzureResourceManagerTemplateDeployment@3
+          #   displayName: "Assignment ACR pull role for the app service"
+          #   inputs:
+          #     deploymentScope: "Resource Group"
+          #     azureResourceManagerConnection: $(serviceConnARM)
+          #     action: "Create Or Update Resource Group"
+          #     resourceGroupName: $(resourceGroupACR)
+          #     location: "centralus"
+          #     templateLocation: "Linked artifact"
+          #     csmFile: "$(Build.ArtifactStagingDirectory)/IaC/app_service/template.json"
+          #     csmParametersFile: "$(Build.ArtifactStagingDirectory)/IaC/role_assignment/parameters.json"
+          #     overrideParameters: '-appServiceResourceGroup $(resourceGroupApp)'
+          #     deploymentMode: "Incremental"
+
+          - task: AzureCLI@2
             displayName: "Assignment ACR pull role for the app service"
             inputs:
-              deploymentScope: "Resource Group"
-              azureResourceManagerConnection: $(serviceConnARM)
-              action: "Create Or Update Resource Group"
-              resourceGroupName: $(resourceGroupACR)
-              location: "centralus"
-              templateLocation: "Linked artifact"
-              csmFile: "$(Build.ArtifactStagingDirectory)/IaC/app_service/template.json"
-              csmParametersFile: "$(Build.ArtifactStagingDirectory)/IaC/role_assignment/parameters.json"
-              overrideParameters: '-appServiceResourceGroup $(resourceGroupApp)'
-              deploymentMode: "Incremental"
+              azureSubscription: $(serviceConnARM)
+              scriptType: pscore
+              scriptLocation: inlineScript
+              inlineScript: 
+                az deployment group create --resource-group $(resourceGroupACR) --template-file "$(Build.ArtifactStagingDirectory)/IaC/role_assignment/template.json"
+
 
   - stage: CLEAN_RESOURCES
     condition: and(eq('${{ parameters.isDeployment }}', false), eq('${{ parameters.isCleanup }}', true))
