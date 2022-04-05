@@ -42,6 +42,7 @@ To see the frontend, navigate to http://localhost:8080. You are immediately redi
 ![image](https://user-images.githubusercontent.com/19845873/161797657-63055952-2c39-41cb-9cbf-3fb527a3bdb7.png)
 
 - **IaC**: Contains all the ARM templates to deploy Azure Container Registry, App sevice plan, App Service Plan, Autoscale  and role assignment.
+
 ![image](https://user-images.githubusercontent.com/19845873/161797830-abbeccd6-161a-43b8-b99c-22684bce28de.png)
 
 - **kubernetes (optional)**:  Contains the yaml manifests  files to deploy on K8 (deployment, service and HPA). Note the cluster, namespaces and the acr-secret must be previously created, it is not cover for this assignment.
